@@ -6,7 +6,9 @@
 #
 # WARNING! All changes made in this file will be lost!
 
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5 import QtCore, QtGui, QtWidgets, QtWidgets
+from PyQt5.QtWidgets import QMessageBox
+import sqlite3
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
@@ -18,6 +20,7 @@ class Ui_Dialog(object):
         self.password_line = QtWidgets.QLineEdit(Dialog)
         self.password_line.setGeometry(QtCore.QRect(140, 140, 231, 20))
         self.password_line.setObjectName("password_line")
+        self.password_line.setEchoMode(QtWidgets.QLineEdit.Password)
         self.loginButton = QtWidgets.QPushButton(Dialog)
         self.loginButton.setGeometry(QtCore.QRect(190, 210, 75, 23))
         self.loginButton.setObjectName("loginButton")
@@ -31,6 +34,10 @@ class Ui_Dialog(object):
         self.label_2.setGeometry(QtCore.QRect(60, 150, 47, 13))
         self.label_2.setObjectName("label_2")
         
+        self.conn = sqlite3.connect("Laundrys.db")  
+        self.cursor = self.conn.cursor()
+        
+        self.loginButton.clicked.connect(self.loginClicked)
                 
 
         self.retranslateUi(Dialog)
@@ -46,8 +53,18 @@ class Ui_Dialog(object):
         self.label_2.setText(_translate("Dialog", "Password"))
         
 
-
-
+    def loginClicked(self,Dialog):
+        uname = (self.username_line.text(),)
+        
+        self.cursor.execute('SELECT * FROM Accounts WHERE Username=?', uname)
+        
+        if self.password_line.text() == self.cursor.fetchone()[1]:
+            loginSuccess = QMessageBox()
+            loginSuccess.setIcon(QMessageBox.Information)
+            loginSuccess.setText("Welcome")
+            loginSuccess.setStandardButtons(QMessageBox.Ok)
+            loginSuccess.exec_()
+            
 
 if __name__ == "__main__":
     import sys
