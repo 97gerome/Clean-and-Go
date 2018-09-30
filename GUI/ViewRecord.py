@@ -1,12 +1,17 @@
-# -*- coding: utf-8 -*-
-
-# Form implementation generated from reading ui file 'C:\Users\lemue\Desktop\MAPUA\COE125\Clean-and-Go-master\ViewRecord.ui'
-#
-# Created by: PyQt5 UI code generator 5.11.2
-#
-# WARNING! All changes made in this file will be lost!
-
+#Author: Group- Garcia-Mandapat
+#ProjectName: Clean-and-Go
+#Filename: ViewRecord
+import sys
+sys.path.append('C:/GitHub/Clean-and-Go/') #change this on another pc
+#PYTHONPATH=../ python DAL/DataAccess.py
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QMessageBox
+#from .. import DAL
+#from DAL import DataAccess
+from DAL.DataAccess import AccessData
+from Form import Ui_Form
+
+
 
 class Ui_ViewRecord(object):
     def setupUi(self, ViewRecord):
@@ -56,13 +61,20 @@ class Ui_ViewRecord(object):
         self.pushButton_Back = QtWidgets.QPushButton(ViewRecord)
         self.pushButton_Back.setGeometry(QtCore.QRect(690, 270, 75, 23))
         self.pushButton_Back.setObjectName("pushButton_Back")
+        self.pushButton_addRequest = QtWidgets.QPushButton(ViewRecord)
+        self.pushButton_addRequest.setGeometry(QtCore.QRect(600, 270, 75, 23))
+        self.pushButton_addRequest.setObjectName("pushButton_addRequest")
 
         self.retranslateUi(ViewRecord)
         QtCore.QMetaObject.connectSlotsByName(ViewRecord)
 
+        #self.pushButton_GoSearch.clicked.connect(self.DisplayData)
+
+        self.pushButton_addRequest.clicked.connect(self.AddForm)
+
     def retranslateUi(self, ViewRecord):
         _translate = QtCore.QCoreApplication.translate
-        ViewRecord.setWindowTitle(_translate("ViewRecord", "Dialog"))
+        ViewRecord.setWindowTitle(_translate("ViewRecord", "Records"))
         item = self.tableWidget.horizontalHeaderItem(0)
         item.setText(_translate("ViewRecord", "Owner"))
         item = self.tableWidget.horizontalHeaderItem(1)
@@ -80,14 +92,40 @@ class Ui_ViewRecord(object):
         self.lblSearch.setText(_translate("ViewRecord", "Search:"))
         self.pushButton_GoSearch.setText(_translate("ViewRecord", "Go"))
         self.pushButton_Back.setText(_translate("ViewRecord", "Go Back"))
+        self.pushButton_addRequest.setText(_translate("ViewRecord", "Add Request"))
 
+    def DisplayData(self):
+        x = AccessData()
+        x.ReadfromLaundry()
+
+        #connector = sqlite3.connect("C:\GitHub\Clean-and-Go\Laundry.db")
+        #rawData = connector.execute('SELECT * FROM Laundry')
+
+        #Initialize table
+        self.tableWidget.setRowCount(0)
+
+        #Display database values into the QTable
+        for rowNumber, rowData in enumerate(x.laundryTableData):
+            self.tableWidget.insertRow(rowNumber)
+            for columnNumber, data in enumerate(rowData):
+                self.tableWidget.setItem(rowNumber, columnNumber, QtWidgets.QTableWidgetItem(str(data)))
+        x.CloseDB()
+
+    def AddForm(self):
+        #self.app = QtWidgets.QApplication(sys.argv)
+        self.Form = QtWidgets.QDialog()
+        self.ui = Ui_Form()
+        self.ui.setup(self.Form)
+        self.Form.show()
 
 if __name__ == "__main__":
-    import sys
+    #import sys
     app = QtWidgets.QApplication(sys.argv)
     ViewRecord = QtWidgets.QDialog()
     ui = Ui_ViewRecord()
     ui.setupUi(ViewRecord)
     ViewRecord.show()
+    ui.DisplayData()
     sys.exit(app.exec_())
+
 

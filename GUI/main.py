@@ -7,7 +7,7 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-
+from ViewRecord import Ui_ViewRecord
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -59,6 +59,8 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+        self.pushButton_AddRequest.click.connect(self.addRequest)
+
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
@@ -74,6 +76,9 @@ class Ui_MainWindow(object):
         self.actionAdd_an_Order.setText(_translate("MainWindow", "Add an Order"))
         self.actionLog_out.setText(_translate("MainWindow", "Log Out"))
 
+
+    def addRequest(self):
+        print("hi")
 
 if __name__ == "__main__":
     import sys
