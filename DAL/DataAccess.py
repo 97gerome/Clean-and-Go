@@ -6,36 +6,25 @@ import sqlite3
 
 
 class AccessData(object):
-    def ReadfromLaundry(self):
-        #Connect to database
-        self.connectorDB = sqlite3.connect("C:\GitHub\Clean-and-Go\Laundry.db")
+    def __init__(self):
+        self.connectorDB = sqlite3.connect("C:\GitHub\Clean-and-Go\Laundry.db")# change this path to "..\Database\Laundry.db"
+
+    def readFromLaundry(self):
+        #self.connectorDB = sqlite3.connect("C:\GitHub\Clean-and-Go\Laundry.db")
         self.laundryTableData = self.connectorDB.execute('SELECT * FROM Laundry')
 
-    def CloseDB(self):
+
+    def writeToLaundry(self, owner, weight, cost, date, orderNumber,pickupOrDelivery):
+        cursor = self.connectorDB.cursor()
+        ins ='''INSERT INTO Laundry(owner, weight, cost, date, orderNumber, pickupOrDelivery) VALUES(?,?,?,?,?,?)'''
+        laundryTableData = self.connectorDB.execute('SELECT * FROM Laundry')
+
+
+
+    def closeDB(self):
         self.connectorDB.close()
 
-        '''
-        #self.data1 = cursor1.fetchall()
-        self.length = self.data1.__len__()
-        self.Owner = [None] * length
-        self.Weight = [0] * length
-        self.TotalCost = [0] * length
-        self.DateReceived = [None] * length
-        self.OrderNumber = [None] * length
-        self.PickUpOrDelivery = [None] * length
-
-        #print(data1.__len__()) #number of items int the database
-        x = 0
-        while x < self.length:
-            self.Owner[x] = data1[x][0]
-            self.Weight[x] = data1[x][1]
-            self.TotalCost[x] = data1[x][2]
-            self.DateReceived[x] = data1[x][3]
-            self.OrderNumber[x] = data1[x][4]
-            self.PickUpOrDelivery[x] = data1[x][5]
-            x = x + 1
-        '''
-    def PrintData(self):
+    def printData(self):
         i = 0
         while i < self.length:
             print("Owner: ",self.Owner[i])
