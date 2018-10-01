@@ -71,6 +71,7 @@ class Ui_ViewRecord(object):
         #self.pushButton_GoSearch.clicked.connect(self.DisplayData)
 
         self.pushButton_addRequest.clicked.connect(self.AddForm)
+        self.pushButton_Back.clicked.connect(lambda: self.backToMain(ViewRecord))
 
     def retranslateUi(self, ViewRecord):
         _translate = QtCore.QCoreApplication.translate
@@ -96,7 +97,7 @@ class Ui_ViewRecord(object):
 
     def DisplayData(self):
         x = AccessData()
-        x.ReadfromLaundry()
+        x.readFromLaundry()
 
         #connector = sqlite3.connect("C:\GitHub\Clean-and-Go\Laundry.db")
         #rawData = connector.execute('SELECT * FROM Laundry')
@@ -109,14 +110,18 @@ class Ui_ViewRecord(object):
             self.tableWidget.insertRow(rowNumber)
             for columnNumber, data in enumerate(rowData):
                 self.tableWidget.setItem(rowNumber, columnNumber, QtWidgets.QTableWidgetItem(str(data)))
-        x.CloseDB()
+        x.closeDB()
 
+    #Function used to display request form
     def AddForm(self):
-        #self.app = QtWidgets.QApplication(sys.argv)
         self.Form = QtWidgets.QDialog()
         self.ui = Ui_Form()
         self.ui.setup(self.Form)
         self.Form.show()
+
+    #Function used to exit the viewrecord ui
+    def backToMain(self, ViewRecord):
+        ViewRecord.close()
 
 if __name__ == "__main__":
     #import sys
