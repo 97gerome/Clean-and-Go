@@ -1,0 +1,103 @@
+# -*- coding: utf-8 -*-
+
+# Form implementation generated from reading ui file 'CAG_viewCustomers.ui'
+#
+# Created by: PyQt5 UI code generator 5.6
+#
+# WARNING! All changes made in this file will be lost!
+
+from PyQt5 import QtCore, QtGui, QtWidgets
+
+class Ui_Dialog(object):
+    def setupUi(self, Dialog):
+        Dialog.setObjectName("Dialog")
+        Dialog.resize(660, 457)
+        self.groupBox = QtWidgets.QGroupBox(Dialog)
+        self.groupBox.setGeometry(QtCore.QRect(10, 10, 641, 441))
+        self.groupBox.setObjectName("groupBox")
+        self.searchLine = QtWidgets.QLineEdit(self.groupBox)
+        self.searchLine.setGeometry(QtCore.QRect(80, 30, 221, 20))
+        self.searchLine.setObjectName("searchLine")
+        self.label = QtWidgets.QLabel(self.groupBox)
+        self.label.setGeometry(QtCore.QRect(20, 30, 47, 13))
+        font = QtGui.QFont()
+        font.setPointSize(11)
+        self.label.setFont(font)
+        self.label.setObjectName("label")
+        self.goButton = QtWidgets.QPushButton(self.groupBox)
+        self.goButton.setGeometry(QtCore.QRect(320, 30, 75, 23))
+        self.goButton.setObjectName("goButton")
+        self.groupBox_2 = QtWidgets.QGroupBox(self.groupBox)
+        self.groupBox_2.setGeometry(QtCore.QRect(10, 140, 621, 261))
+        self.groupBox_2.setObjectName("groupBox_2")
+        self.tableWidget = QtWidgets.QTableWidget(self.groupBox_2)
+        self.tableWidget.setGeometry(QtCore.QRect(10, 20, 601, 231))
+        self.tableWidget.setObjectName("tableWidget")
+        self.tableWidget.setColumnCount(6)
+        self.tableWidget.setRowCount(0)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget.setHorizontalHeaderItem(0, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget.setHorizontalHeaderItem(1, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget.setHorizontalHeaderItem(2, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget.setHorizontalHeaderItem(3, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget.setHorizontalHeaderItem(4, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget.setHorizontalHeaderItem(5, item)
+        self.textName = QtWidgets.QLabel(self.groupBox)
+        self.textName.setGeometry(QtCore.QRect(20, 70, 161, 16))
+        self.textName.setText("")
+        self.textName.setObjectName("textName")
+        self.textContact = QtWidgets.QLabel(self.groupBox)
+        self.textContact.setGeometry(QtCore.QRect(20, 100, 161, 16))
+        self.textContact.setText("")
+        self.textContact.setObjectName("textContact")
+        self.textEmail = QtWidgets.QLabel(self.groupBox)
+        self.textEmail.setGeometry(QtCore.QRect(200, 70, 421, 16))
+        self.textEmail.setText("")
+        self.textEmail.setObjectName("textEmail")
+        self.textAddress = QtWidgets.QLabel(self.groupBox)
+        self.textAddress.setGeometry(QtCore.QRect(200, 100, 421, 16))
+        self.textAddress.setText("")
+        self.textAddress.setObjectName("textAddress")
+        self.closeButton = QtWidgets.QPushButton(self.groupBox)
+        self.closeButton.setGeometry(QtCore.QRect(540, 410, 91, 23))
+        self.closeButton.setObjectName("closeButton")
+
+        self.retranslateUi(Dialog)
+        QtCore.QMetaObject.connectSlotsByName(Dialog)
+
+    def retranslateUi(self, Dialog):
+        _translate = QtCore.QCoreApplication.translate
+        Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
+        self.groupBox.setTitle(_translate("Dialog", "Customers"))
+        self.label.setText(_translate("Dialog", "Search"))
+        self.goButton.setText(_translate("Dialog", "Go"))
+        self.groupBox_2.setTitle(_translate("Dialog", "Order History"))
+        item = self.tableWidget.horizontalHeaderItem(0)
+        item.setText(_translate("Dialog", "Order Number"))
+        item = self.tableWidget.horizontalHeaderItem(1)
+        item.setText(_translate("Dialog", "Weight"))
+        item = self.tableWidget.horizontalHeaderItem(2)
+        item.setText(_translate("Dialog", "Cost"))
+        item = self.tableWidget.horizontalHeaderItem(3)
+        item.setText(_translate("Dialog", "Date Received"))
+        item = self.tableWidget.horizontalHeaderItem(4)
+        item.setText(_translate("Dialog", "Pick Up/Delivery"))
+        item = self.tableWidget.horizontalHeaderItem(5)
+        item.setText(_translate("Dialog", "Date Completed"))
+        self.closeButton.setText(_translate("Dialog", "Close"))
+
+
+if __name__ == "__main__":
+    import sys
+    app = QtWidgets.QApplication(sys.argv)
+    Dialog = QtWidgets.QDialog()
+    ui = Ui_Dialog()
+    ui.setupUi(Dialog)
+    Dialog.show()
+    sys.exit(app.exec_())
+
