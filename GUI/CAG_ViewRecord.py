@@ -2,22 +2,20 @@
 #ProjectName: Clean-and-Go
 #Filename: ViewRecord
 import sys
-sys.path.append('C:/GitHub/Clean-and-Go/') #change this on another pc
+sys.path.append('../') #change this on another pc
 
-#PYTHONPATH=../ python DAL/DataAccess.py
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QMessageBox
-
-#from DAL.DataAccess import AccessData
-
-
+from DAL.DataAccess import Data_access
 from BL.RecordLogic import Record
-from Form import Ui_Form
-
+from CAG_Form import Ui_Form
+#from CAG_main import Ui_CAG_main
 
 
 class Ui_ViewRecord(object):
-    def setupUi(self, ViewRecord):
+    def setupUi(self, ViewRecord,CAG_main):
+        #self.CAG_main = QtWidgets.QMainWindow()
+        #self.ui = Ui_CAG_main()
+        #self.ui.setupUi(self.CAG_main)
         ViewRecord.setObjectName("ViewRecord")
         ViewRecord.resize(894, 329)
         self.tableWidget = QtWidgets.QTableWidget(ViewRecord)
@@ -76,7 +74,7 @@ class Ui_ViewRecord(object):
         #self.pushButton_GoSearch.clicked.connect(self.DisplayData)
 
         self.pushButton_addRequest.clicked.connect(self.AddForm)
-        self.pushButton_Back.clicked.connect(lambda: self.backToMain(ViewRecord))
+        self.pushButton_Back.clicked.connect(lambda: self.backToMain(ViewRecord,CAG_main))
 
     def retranslateUi(self, ViewRecord):
         _translate = QtCore.QCoreApplication.translate
@@ -102,11 +100,11 @@ class Ui_ViewRecord(object):
         self.DisplayData()
     def DisplayData(self):
         x = Record()
-        dataTable = x.getTableValues()
+        tableData = x.getTableValues()
         #Initialize table
         self.tableWidget.setRowCount(0)
         #Display database values into the QTable
-        for rowNumber, rowData in enumerate(dataTable):
+        for rowNumber, rowData in enumerate(tableData):
             self.tableWidget.insertRow(rowNumber)
             for columnNumber, data in enumerate(rowData):
                 self.tableWidget.setItem(rowNumber, columnNumber, QtWidgets.QTableWidgetItem(str(data)))
@@ -122,16 +120,17 @@ class Ui_ViewRecord(object):
     def rowSelected(self):
         print("row select")
     #Function used to exit the viewrecord ui
-    def backToMain(self, ViewRecord):
+    def backToMain(self, ViewRecord, CAG_main):
+        CAG_main.show()
         ViewRecord.close()
-
+'''
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     ViewRecord = QtWidgets.QDialog()
     ui = Ui_ViewRecord()
     ui.setupUi(ViewRecord)
     ViewRecord.show()
-    #ui.DisplayData()
+    ui.DisplayData()
     sys.exit(app.exec_())
-
+'''
 

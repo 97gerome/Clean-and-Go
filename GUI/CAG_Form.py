@@ -131,10 +131,10 @@ class Ui_Form(object):
         press = False
         fold = False
         paid = False
-        amount = 0
         owner = self.lineEdit_owner.text()
         weight = self.lineEdit_weight.text()
         date = self.lineEdit_dateReceived.text()
+        amount = 0
         '''
         if self.radioButton_pickUp.isChecked() == self.radioButton_delivery.isChecked():
             print("Please Select if Pick-up or Delivery")
@@ -162,13 +162,6 @@ class Ui_Form(object):
             paid = False
             amount = int(self.lineEdit_downPayment.text())
         rec = Record()
-        print("rec object created")
-        print(owner)
-        print(weight)
-        print(date)
-        print(pickupOrDelivery)
-        print(handWash,machineWash,dryClean,fold,press,paid)
-        print(amount)
         rec.getValues(owner, weight, date, pickupOrDelivery, handWash,machineWash,dryClean,fold,press,paid,amount)
         Form.close()
 

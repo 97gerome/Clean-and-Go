@@ -52,12 +52,11 @@ class Record(object):
             self.payment = "Balance needs to be paid"
 
         self.service = service1 + service2 + service3
-        data = (self.owner, self.weight, self.cost, self.dateReceived, self.orderNumber, self.pickupOrDelivery,self.service, self.balance)
-        print(data)
-        database = AccessData()
-
+        data = (self.owner, self.weight, self.cost, self.dateReceived, self.orderNumber, self.pickupOrDelivery,False)#self.service, self.balance)
+        #print(data)
+        database = Data_access()
         #print("data: ",data)
-        #database.writeToLaundry(self.owner,self.weight,self.cost,self.dateReceived,self.orderNumber,self.pickupOrDelivery)
+        database.writeToLaundry(data)
         #print("got it all")
 
     def calculateCost(self, weight):
@@ -102,6 +101,10 @@ class Record(object):
         return balance
 
     def getTableValues(self):
-        tableData = Data_access
+        tableData = Data_access()
         tableData.readFromLaundry()
         return tableData.laundryTableData
+
+    def closeDB(self):
+        exitTable = Data_access()
+        exitTable.closeDB()
