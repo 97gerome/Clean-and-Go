@@ -5,7 +5,7 @@
 import sqlite3
 
 
-class AccessData(object):
+class Data_access(object):
     def __init__(self):
         self.connectorDB = sqlite3.connect("C:\GitHub\Clean-and-Go\Laundry.db")# change this path to "..\Database\Laundry.db"
 
@@ -14,11 +14,15 @@ class AccessData(object):
         self.laundryTableData = self.connectorDB.execute('SELECT * FROM Laundry')
 
 
-    def writeToLaundry(self, owner, weight, cost, date, orderNumber,pickupOrDelivery):
+    def writeToLaundry(self, owner,weight,cost,dateReceived,orderNumber,pickupOrDelivery):
+        print("got here")
+        #ins = "INSERT INTO Laundry VALUES(?,?,?,?,?,?)"
+        self.laundryTableData = self.connectorDB.execute('SELECT * FROM Laundry')
         cursor = self.connectorDB.cursor()
-        ins ='''INSERT INTO Laundry(owner, weight, cost, date, orderNumber, pickupOrDelivery) VALUES(?,?,?,?,?,?)'''
-        laundryTableData = self.connectorDB.execute('SELECT * FROM Laundry')
-
+        ################ERROR CAN'T INSERT DATA INTO TABLE##################################
+        with self.connectorDB:
+            cursor.execute("INSERT INTO Laundry VALUES(?,?,?,?,?,?)",(owner,weight,cost,dateReceived,orderNumber,pickupOrDelivery))
+            self.closeDB()
 
 
     def closeDB(self):
@@ -35,19 +39,3 @@ class AccessData(object):
             print("Pick-up or Delivery: ",self.PickUpOrDelivery[i])
             print('\n')
             i = i + 1
-
-
-'''
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    ViewRecord = QtWidgets.QDialog()
-    viewer = Ui_ViewRecord()
-    viewer.setupUi(ViewRecord)
-    ViewRecord.show()
-    sys.exit(app.exec_())
-
-AccessData = DataAccess()
-AccessData.ReadData()
-viewer.
-'''

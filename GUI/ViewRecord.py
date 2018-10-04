@@ -3,12 +3,15 @@
 #Filename: ViewRecord
 import sys
 sys.path.append('C:/GitHub/Clean-and-Go/') #change this on another pc
+
 #PYTHONPATH=../ python DAL/DataAccess.py
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QMessageBox
-#from .. import DAL
-#from DAL import DataAccess
-from DAL.DataAccess import AccessData
+
+#from DAL.DataAccess import AccessData
+
+
+from BL.RecordLogic import Record
 from Form import Ui_Form
 
 
@@ -68,6 +71,8 @@ class Ui_ViewRecord(object):
         self.retranslateUi(ViewRecord)
         QtCore.QMetaObject.connectSlotsByName(ViewRecord)
 
+        #Select tablerow
+        #self.tableWidget.pressed(self.rowSelected)
         #self.pushButton_GoSearch.clicked.connect(self.DisplayData)
 
         self.pushButton_addRequest.clicked.connect(self.AddForm)
@@ -94,19 +99,14 @@ class Ui_ViewRecord(object):
         self.pushButton_GoSearch.setText(_translate("ViewRecord", "Go"))
         self.pushButton_Back.setText(_translate("ViewRecord", "Go Back"))
         self.pushButton_addRequest.setText(_translate("ViewRecord", "Add Request"))
-
+        self.DisplayData()
     def DisplayData(self):
-        x = AccessData()
-        x.readFromLaundry()
-
-        #connector = sqlite3.connect("C:\GitHub\Clean-and-Go\Laundry.db")
-        #rawData = connector.execute('SELECT * FROM Laundry')
-
+        x = Record()
+        dataTable = x.getTableValues()
         #Initialize table
         self.tableWidget.setRowCount(0)
-
         #Display database values into the QTable
-        for rowNumber, rowData in enumerate(x.laundryTableData):
+        for rowNumber, rowData in enumerate(dataTable):
             self.tableWidget.insertRow(rowNumber)
             for columnNumber, data in enumerate(rowData):
                 self.tableWidget.setItem(rowNumber, columnNumber, QtWidgets.QTableWidgetItem(str(data)))
@@ -114,23 +114,24 @@ class Ui_ViewRecord(object):
 
     #Function used to display request form
     def AddForm(self):
-        self.Form = QtWidgets.QDialog()
-        self.ui = Ui_Form()
-        self.ui.setup(self.Form)
-        self.Form.show()
+        Form = QtWidgets.QDialog()
+        ui = Ui_Form()
+        ui.setup(Form)
+        Form.show()
 
+    def rowSelected(self):
+        print("row select")
     #Function used to exit the viewrecord ui
     def backToMain(self, ViewRecord):
         ViewRecord.close()
 
 if __name__ == "__main__":
-    #import sys
     app = QtWidgets.QApplication(sys.argv)
     ViewRecord = QtWidgets.QDialog()
     ui = Ui_ViewRecord()
     ui.setupUi(ViewRecord)
     ViewRecord.show()
-    ui.DisplayData()
+    #ui.DisplayData()
     sys.exit(app.exec_())
 
 
