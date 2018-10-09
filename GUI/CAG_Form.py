@@ -1,6 +1,9 @@
 
+
+import sys
+sys.path.append("../")
 from PyQt5 import QtCore, QtGui, QtWidgets
-from BL.BusinessLogic import Record
+from BL.BL_record import BL_record
 
 class Ui_Form(object):
     def setup(self, Form):
@@ -94,6 +97,10 @@ class Ui_Form(object):
         self.pushButton_add.clicked.connect(lambda: self.addRecord(Form))
         self.radioButton_downPayment.clicked.connect(lambda: self.enableAmount())
         self.radioButton_fullPayment.clicked.connect(lambda: self.enableAmount())
+        self.radioButton_handWashed.clicked.connect(lambda: self.setCheckBoxAvailability())
+        self.radioButton_machineWashed.clicked.connect(lambda: self.setCheckBoxAvailability())
+        self.radioButton_dryClean.clicked.connect(lambda: self.setCheckBoxAvailability())
+
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
@@ -119,10 +126,19 @@ class Ui_Form(object):
         self.radioButton_downPayment.setText(_translate("Form", "Down Payment"))
         self.label_amountDownPayment.setText(_translate("Form", "Amount:"))
         self.getDate()
-        self.lineEdit_dateReceived.setReadOnly(True)
+        self.lineEdit_dateReceived.setEnabled(False)
         self.lineEdit_downPayment.setEnabled(False)
+        self.setCheckBoxAvailability()
 
-    #####ADDED Functions#######
+    def setCheckBoxAvailability(self):
+        if (((self.radioButton_handWashed and self.radioButton_machineWashed) and self.radioButton_dryClean.isChecked()) == False):
+            self.checkBox_press.setEnabled(False)
+            self.checkBox_fold.setEnabled(False)
+        else:
+            self.checkBox_press.setEnabled(True)
+            self.checkBox_fold.setEnabled(True)
+
+    #open add request form
     def addRecord(self, Form):
         print("add record")
         handWash = False
@@ -161,7 +177,7 @@ class Ui_Form(object):
         if self.radioButton_downPayment.isChecked() == True:
             paid = False
             amount = int(self.lineEdit_downPayment.text())
-        rec = Record()
+        rec = BL_record()
         rec.getValues(owner, weight, date, pickupOrDelivery, handWash,machineWash,dryClean,fold,press,paid,amount)
         Form.close()
 
@@ -171,7 +187,7 @@ class Ui_Form(object):
         else:
             self.lineEdit_downPayment.setEnabled(True)
     def getDate(self):
-        recordDate = Record()
+        recordDate = BL_record()
         date = recordDate.getDate()
         self.lineEdit_dateReceived.setText(date)
 

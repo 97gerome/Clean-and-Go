@@ -3,12 +3,14 @@
 #Filename: ViewRecord
 import sys
 sys.path.append('../') #change this on another pc
+sys.path.append('C:/GitHub/Clean-and-Go/')
 from PyQt5 import QtCore, QtGui, QtWidgets
-from DAL.DataAccess import Data_access
+#from DAL.DAL_record import DAL_record
+from BL.BL_record import BL_record
 from CAG_Form import Ui_Form
 #from CAG_main import Ui_CAG_main
 
-
+#gui -> bl -> dall
 class Ui_ViewRecord(object):
     def setupUi(self, ViewRecord,CAG_main):
         #self.CAG_main = QtWidgets.QMainWindow()
@@ -35,6 +37,8 @@ class Ui_ViewRecord(object):
         self.tableWidget.setHorizontalHeaderItem(5, item)
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget.setHorizontalHeaderItem(6, item)
+        #item = QtWidgets.QTableWidgetItem()
+        #self.tableWidget.setHorizontalHeaderItem(7, item)
         self.tableWidget.horizontalHeader().setVisible(True)
         self.tableWidget.horizontalHeader().setCascadingSectionResizes(False)
         self.tableWidget.horizontalHeader().setDefaultSectionSize(120)
@@ -82,31 +86,36 @@ class Ui_ViewRecord(object):
         item = self.tableWidget.horizontalHeaderItem(1)
         item.setText(_translate("ViewRecord", "Weight"))
         item = self.tableWidget.horizontalHeaderItem(2)
-        item.setText(_translate("ViewRecord", "Total Cost"))
+        item.setText(_translate("ViewRecord", "Service"))
         item = self.tableWidget.horizontalHeaderItem(3)
-        item.setText(_translate("ViewRecord", "Date Received"))
+        item.setText(_translate("ViewRecord", "Total Cost"))
         item = self.tableWidget.horizontalHeaderItem(4)
-        item.setText(_translate("ViewRecord", "Order Number"))
+        item.setText(_translate("ViewRecord", "Date Received"))
         item = self.tableWidget.horizontalHeaderItem(5)
-        item.setText(_translate("ViewRecord", "Pick-up or Delivery"))
+        item.setText(_translate("ViewRecord", "Order Number"))
         item = self.tableWidget.horizontalHeaderItem(6)
-        item.setText(_translate("ViewRecord", "Pick-up Date"))
+        item.setText(_translate("ViewRecord", "Pick-up or Delivery"))
+        #item = self.tableWidget.horizontalHeaderItem(7)
+        #item.setText(_translate("ViewRecord", "Status"))
         self.lblSearch.setText(_translate("ViewRecord", "Search:"))
         self.pushButton_GoSearch.setText(_translate("ViewRecord", "Go"))
         self.pushButton_Back.setText(_translate("ViewRecord", "Go Back"))
         self.pushButton_addRequest.setText(_translate("ViewRecord", "Add Request"))
-        self.DisplayData()
-    def DisplayData(self):
-        x = Data_access()
-        x.readFromLaundry()
-        #Initialize table
         self.tableWidget.setRowCount(0)
-        #Display database values into the QTable
-        for rowNumber, rowData in enumerate(x.laundryTableData):
+        self.DisplayData()
+
+
+    def DisplayData(self):
+        x = BL_record()
+        dataTable = x.getTableValues()
+        for rowNumber, rowData in enumerate(dataTable):
+            #print(rowData)
             self.tableWidget.insertRow(rowNumber)
+            #if ongoingRequest == True:
+            print("new row")
             for columnNumber, data in enumerate(rowData):
-                self.tableWidget.setItem(rowNumber, columnNumber, QtWidgets.QTableWidgetItem(str(data)))
-        x.closeDB()
+                if columnNumber != 8:
+                    self.tableWidget.setItem(rowNumber, columnNumber, QtWidgets.QTableWidgetItem(str(data)))
 
     #Function used to display request form
     def AddForm(self):
@@ -121,7 +130,7 @@ class Ui_ViewRecord(object):
     def backToMain(self, ViewRecord, CAG_main):
         CAG_main.show()
         ViewRecord.close()
-'''
+
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     ViewRecord = QtWidgets.QDialog()
@@ -130,5 +139,5 @@ if __name__ == "__main__":
     ViewRecord.show()
     ui.DisplayData()
     sys.exit(app.exec_())
-'''
+
 

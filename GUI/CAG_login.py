@@ -1,26 +1,17 @@
-# -*- coding: utf-8 -*-
-
-# Form implementation generated from reading ui file 'CAG_Login.ui'
-#
-# Created by: PyQt5 UI code generator 5.6
-#
-# WARNING! All changes made in this file will be lost!
-
-from PyQt5 import QtCore, QtGui, QtWidgets, QtWidgets
-from PyQt5.QtWidgets import QMessageBox
-from CAG_main import Ui_CAG_main
-
 import sys
 sys.path.append('../')
-from DAL.DataAccess import Data_access
-from BL.loginLogic import Login_logic
+
+from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QMessageBox
+from CAG_main import Ui_CAG_main
+from BL.BL_login import BL_login
 
 class Ui_Login(object):
     def setupUi(self, Dialog):
         #####################################################################
         self.CAG_main = QtWidgets.QMainWindow()
         self.ui = Ui_CAG_main()
-        self.ui.setupUi(self.CAG_main, Dialog)     
+        self.ui.setupUi(self.CAG_main, Dialog)
         ######################################################################
         Dialog.setObjectName("Login")
         Dialog.resize(400, 264)
@@ -63,7 +54,7 @@ class Ui_Login(object):
 
 
     def loginClicked(self,Dialog):          
-        logic = Login_logic()
+        logic = BL_login()
         uname = (self.username_line.text(),)
         
         if logic.check_user(uname) == 1:

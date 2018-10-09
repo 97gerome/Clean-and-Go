@@ -76,6 +76,7 @@ class Ui_CAG_main(object):
         self.orders_button.clicked.connect(lambda: self.startForm(CAG_main))
         self.action_Exit.triggered.connect(lambda: self.closeMain(CAG_main))
         self.actionLog_Out.triggered.connect(lambda: self.logOut(CAG_main, CAG_login))
+
     def retranslateUi(self, CAG_main):
         _translate = QtCore.QCoreApplication.translate
         CAG_main.setWindowTitle(_translate("CAG_main", "MainWindow"))
@@ -106,6 +107,7 @@ class Ui_CAG_main(object):
     def logOut(self, CAG_main, CAG_login):
         CAG_login.show()
         CAG_main.close()
+
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
