@@ -31,9 +31,15 @@ class Ui_Form(object):
         self.label_weight = QtWidgets.QLabel(self.formLayoutWidget)
         self.label_weight.setObjectName("label_weight")
         self.formLayout.setWidget(1, QtWidgets.QFormLayout.LabelRole, self.label_weight)
+        '''
         self.lineEdit_weight = QtWidgets.QLineEdit(self.formLayoutWidget)
         self.lineEdit_weight.setObjectName("lineEdit_weight")
         self.formLayout.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.lineEdit_weight)
+        '''
+        self.spinBox_weight = QtWidgets.QSpinBox(self.formLayoutWidget)
+        self.spinBox_weight.setObjectName("spinBox_weight")
+        self.formLayout.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.spinBox_weight)
+
         self.label_pickupOrDelivery = QtWidgets.QLabel(self.formLayoutWidget)
         self.label_pickupOrDelivery.setObjectName("label_pickupOrDelivery")
         self.formLayout.setWidget(4, QtWidgets.QFormLayout.LabelRole, self.label_pickupOrDelivery)
@@ -138,14 +144,6 @@ class Ui_Form(object):
         self.setCheckBoxAvailability()
 
     def setCheckBoxAvailability(self):
-        if (((self.radioButton_handWashed.isChecked() or self.radioButton_machineWashed.isChecked()) or self.radioButton_dryClean.isChecked()) == False):
-            self.checkBox_press.setEnabled(False)
-            self.checkBox_fold.setEnabled(False)
-        else:
-            self.checkBox_press.setEnabled(True)
-            self.checkBox_fold.setEnabled(True)
-
-    #open add request form
     def addRecord(self, Form, selfObject):
         print("add record")
         handWash = False
@@ -155,7 +153,7 @@ class Ui_Form(object):
         fold = False
         paid = False
         owner = self.lineEdit_owner.text()
-        weight = self.lineEdit_weight.text()
+        weight = self.spinBox_weight.text()
         date = self.lineEdit_dateReceived.text()
         amount = 0
         pickupOrDelivery = ""

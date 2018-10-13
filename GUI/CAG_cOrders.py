@@ -71,6 +71,7 @@ class Ui_completedOrders(object):
 
         self.pushButton_Back.setText(_translate("ViewRecord", "Go Back"))
         self.DisplayData()
+
     def DisplayData(self):
         x = BL_record()
         status = "Done"

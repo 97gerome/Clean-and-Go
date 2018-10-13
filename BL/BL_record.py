@@ -7,7 +7,7 @@
 import sys
 sys.path.append('../') #change this on another pc
 from DAL.DAL_record import DAL_record
-from PyQt5.QtWidgets import QMessageBox
+from PyQt5.QtWidgets import QMessageBox,QInputDialog,QLineEdit
 class BL_record(object):
    def __init__(self):
         self.owner = "None"
@@ -151,5 +151,24 @@ class BL_record(object):
    def checkBalance(self,orderNumber):
        getBalance = DAL_record()
        return getBalance.readBalance(orderNumber)
+
+   def updateBalance(self, orderNumber,widgetXD):
+       objDALRecord = DAL_record()
+       balance = self.checkBalance(orderNumber)
+       title = "Balance Information"
+       if balance != 0:
+           msg = "Remaining Balance: " + str(balance[0]) + "\n Payment: "
+           amount, okPressed = QInputDialog.getText(widgetXD, title, msg, QLineEdit.Normal, "")
+           print(amount)
+           newBalance = balance[0] - int(amount)
+           print(newBalance)
+           objDALRecord.updateBalance(orderNumber,newBalance)
+       else:
+           msg = "No remaining balance."
+           msgBox = QMessageBox()
+           msgBox.setIcon(QMessageBox.Warning)
+           msgBox.setWindowTitle(title)
+           msgBox.setText(msg)
+
    def closeDB(self, dataTable):
        dataTable.closeDB()

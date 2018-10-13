@@ -5,12 +5,12 @@ import sys
 sys.path.append('../')
 sys.path.append('C:/GitHub/Clean-and-Go/')
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QMessageBox
+from PyQt5.QtWidgets import QMessageBox, QInputDialog, QWidget, QLineEdit
 from BL.BL_record import BL_record
 from CAG_Form import Ui_Form
 
 #gui -> bl -> dall
-class Ui_ViewRecord(object):
+class Ui_ViewRecord(QWidget):
     def setupUi(self, ViewRecord,CAG_main, selfObject):
         #self.CAG_main = QtWidgets.QMainWindow()
         #self.ui = Ui_CAG_main()
@@ -127,24 +127,23 @@ class Ui_ViewRecord(object):
 
 
     def rowSelected(self, row):
-        switchStatus = BL_record()
+        objRecord = BL_record()
         orderNumber = int(self.tableWidget.item(row,5).text())
+
         msgBox = QMessageBox()
         msgBox.setIcon(QMessageBox.Information)
         msgBox.setText("Is this request done?")
         msgBox.setWindowTitle("Status Update")
         buttonDone = msgBox.addButton('Done', QMessageBox.YesRole)
+        buttonPayBalance = msgBox.addButton('Pay Balance', QMessageBox.ActionRole)
         buttonOngoing = msgBox.addButton('Not Yet',QMessageBox.NoRole)
         msgBox.exec()
 
         if msgBox.clickedButton()== buttonDone:
-            #print("Done")
-            switchStatus.changeStatus(orderNumber)
-            self.DisplayData()
-        #else:
-            #print("Ongoing")
-
-        #msgBox.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+            objRecord.changeStatus(orderNumber)
+        elif msgBox.clickedButton() == buttonPayBalance:
+            objRecord.updateBalance(orderNumber,self)
+        self.DisplayData()
 
     #Function used to exit the viewrecord ui
     def backToMain(self, ViewRecord, CAG_main):

@@ -17,7 +17,6 @@ class DAL_record(object):
     def readFromLaundry(self):
         #self.connectorDB = sqlite3.connect("C:\GitHub\Clean-and-Go\Laundry.db")
         self.laundryTableData = self.conn.execute('SELECT * FROM Laundry')
-        print("data fetched")
         return self.laundryTableData.fetchall()
 
     def readLaundry(self,requestedStatus):
@@ -29,8 +28,8 @@ class DAL_record(object):
         data = (orderNumber,)
         textCommand = "SELECT Balance FROM Laundry WHERE OrderNumber=?"
         balance = self.conn.execute(textCommand,data)
-
         return balance.fetchone()
+
     def writeToLaundry(self,data):
         #print("got here")
         ins = "INSERT INTO Laundry VALUES(?,?,?,?,?,?,?,?,?,?)"
@@ -40,7 +39,6 @@ class DAL_record(object):
         self.closeDB()
 
     def updateStatus(self,orderNumber,date):
-        print("DAL change stat")
         statusData = (orderNumber,)
         dateData = (date,orderNumber)
         statusChange = "UPDATE Laundry SET Status='Done' WHERE OrderNumber=?"
@@ -49,7 +47,13 @@ class DAL_record(object):
         self.cursor.execute(dateCompleteChange,dateData)
         self.conn.commit()
         self.closeDB()
-        print("done")
+
+    def updateBalance(self,orderNumber, newBalance):
+        data = (newBalance,orderNumber)
+        balanceUpdate = "UPDATE Laundry SET Balance=? WHERE OrderNumber=?"
+        self.cursor.execute(balanceUpdate, data)
+        self.conn.commit()
+        self.closeDB()
 
     def closeDB(self):
         self.conn.close()
