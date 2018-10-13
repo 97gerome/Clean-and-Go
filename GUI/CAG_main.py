@@ -8,6 +8,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from CAG_ViewRecord import Ui_ViewRecord
+from CAG_cOrders import Ui_completedOrders
 class Ui_CAG_main(object):
     def setupUi(self, CAG_main, CAG_login):
         CAG_main.setObjectName("CAG_main")
@@ -73,7 +74,8 @@ class Ui_CAG_main(object):
         self.retranslateUi(CAG_main)
         QtCore.QMetaObject.connectSlotsByName(CAG_main)
         
-        self.orders_button.clicked.connect(lambda: self.startForm(CAG_main))
+        self.orders_button.clicked.connect(lambda: self.viewRecord(CAG_main))
+        self.cOrders_Button.clicked.connect(lambda: self.completedRecord(CAG_main))
         self.action_Exit.triggered.connect(lambda: self.closeMain(CAG_main))
         self.actionLog_Out.triggered.connect(lambda: self.logOut(CAG_main, CAG_login))
 
@@ -93,14 +95,22 @@ class Ui_CAG_main(object):
         self.action_Exit.setText(_translate("CAG_main", "Exit"))
         self.actionAbout.setText(_translate("CAG_main", "About"))
     
-    
-    def startForm(self,CAG_main):
+    #display ongoing orders
+    def viewRecord(self,CAG_main):
         ViewRecord = QtWidgets.QDialog()
         ui = Ui_ViewRecord()
-        ui.setupUi(ViewRecord,CAG_main)
+        ui.setupUi(ViewRecord,CAG_main,ui)
         CAG_main.hide()
         ViewRecord.show()
-    
+
+    #display completed orders
+    def completedRecord(self,CAG_main):
+        completedOrders = QtWidgets.QDialog()
+        ui = Ui_completedOrders()
+        ui.setupUi(completedOrders, CAG_main)
+        CAG_main.hide()
+        completedOrders.show()
+
     def closeMain(self, CAG_main):
         CAG_main.close()
 

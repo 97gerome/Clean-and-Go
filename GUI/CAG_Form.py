@@ -3,10 +3,11 @@
 import sys
 sys.path.append("../")
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QMessageBox
 from BL.BL_record import BL_record
 
 class Ui_Form(object):
-    def setup(self, Form):
+    def setup(self, Form,selfObject):
         Form.setObjectName("Form")
         Form.resize(469, 504)
         self.label_requestForm = QtWidgets.QLabel(Form)
@@ -89,17 +90,22 @@ class Ui_Form(object):
         self.label_amountDownPayment.setGeometry(QtCore.QRect(30, 60, 47, 13))
         self.label_amountDownPayment.setObjectName("label_amountDownPayment")
 
+        self.pushButton_checkCost = QtWidgets.QPushButton(self.groupBox_paymentMode)
+        self.pushButton_checkCost.setGeometry(QtCore.QRect(80, 20, 82, 17))
+        self.pushButton_checkCost.setObjectName("pushButton_checkCost")
+
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
         # functions to be added
         self.pushButton_cancel.clicked.connect(lambda: self.cancelClicked(Form))
-        self.pushButton_add.clicked.connect(lambda: self.addRecord(Form))
+        self.pushButton_add.clicked.connect(lambda: self.addRecord(Form,selfObject))
         self.radioButton_downPayment.clicked.connect(lambda: self.enableAmount())
         self.radioButton_fullPayment.clicked.connect(lambda: self.enableAmount())
         self.radioButton_handWashed.clicked.connect(lambda: self.setCheckBoxAvailability())
         self.radioButton_machineWashed.clicked.connect(lambda: self.setCheckBoxAvailability())
         self.radioButton_dryClean.clicked.connect(lambda: self.setCheckBoxAvailability())
+        self.pushButton_checkCost.clicked.connect(lambda: self.checkCost())
 
 
     def retranslateUi(self, Form):
@@ -125,13 +131,14 @@ class Ui_Form(object):
         self.radioButton_fullPayment.setText(_translate("Form", "Full"))
         self.radioButton_downPayment.setText(_translate("Form", "Down Payment"))
         self.label_amountDownPayment.setText(_translate("Form", "Amount:"))
+        self.pushButton_checkCost.setText(_translate("Form", "Check Cost"))
         self.getDate()
         self.lineEdit_dateReceived.setEnabled(False)
         self.lineEdit_downPayment.setEnabled(False)
         self.setCheckBoxAvailability()
 
     def setCheckBoxAvailability(self):
-        if (((self.radioButton_handWashed and self.radioButton_machineWashed) and self.radioButton_dryClean.isChecked()) == False):
+        if (((self.radioButton_handWashed.isChecked() or self.radioButton_machineWashed.isChecked()) or self.radioButton_dryClean.isChecked()) == False):
             self.checkBox_press.setEnabled(False)
             self.checkBox_fold.setEnabled(False)
         else:
@@ -139,7 +146,7 @@ class Ui_Form(object):
             self.checkBox_fold.setEnabled(True)
 
     #open add request form
-    def addRecord(self, Form):
+    def addRecord(self, Form, selfObject):
         print("add record")
         handWash = False
         machineWash = False
@@ -151,12 +158,6 @@ class Ui_Form(object):
         weight = self.lineEdit_weight.text()
         date = self.lineEdit_dateReceived.text()
         amount = 0
-        '''
-        if self.radioButton_pickUp.isChecked() == self.radioButton_delivery.isChecked():
-            print("Please Select if Pick-up or Delivery")
-            self.retranslateUi(Form)
-        '''
-
         pickupOrDelivery = ""
         if self.radioButton_pickUp.isChecked() == True:
             pickupOrDelivery = "Pick-up"
@@ -179,6 +180,7 @@ class Ui_Form(object):
             amount = int(self.lineEdit_downPayment.text())
         rec = BL_record()
         rec.getValues(owner, weight, date, pickupOrDelivery, handWash,machineWash,dryClean,fold,press,paid,amount)
+        selfObject.DisplayData()
         Form.close()
 
     def enableAmount(self):
@@ -191,6 +193,34 @@ class Ui_Form(object):
         date = recordDate.getDate()
         self.lineEdit_dateReceived.setText(date)
 
+    def checkCost(self):
+        handWash = False
+        machineWash = False
+        dryClean = False
+        press = False
+        fold = False
+        weight = int(self.lineEdit_weight.text())
+
+        if self.radioButton_handWashed.isChecked() == True:
+            handWash = True
+        elif self.radioButton_machineWashed.isChecked() == True:
+            machineWash = True
+        elif self.radioButton_dryClean.isChecked() == True:
+            dryClean = True
+        if self.checkBox_fold.isChecked() == True:
+            fold = True
+        if self.checkBox_press.isChecked() == True:
+            press = True
+
+        calculateCost = BL_record()
+        cost = calculateCost.calculateCost(weight,handWash,machineWash,dryClean,fold,press)
+        msgString = "Total Cost: " + str(cost)
+        msgBox = QMessageBox()
+        msgBox.setIcon(QMessageBox.Information)
+        msgBox.setText(msgString)
+        msgBox.setWindowTitle("Cost Check")
+        buttonOK = msgBox.addButton('Ok', QMessageBox.YesRole)
+        msgBox.exec()
 
     def cancelClicked(self, Form):
         Form.close()

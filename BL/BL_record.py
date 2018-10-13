@@ -7,6 +7,7 @@
 import sys
 sys.path.append('../') #change this on another pc
 from DAL.DAL_record import DAL_record
+from PyQt5.QtWidgets import QMessageBox
 class BL_record(object):
    def __init__(self):
         self.owner = "None"
@@ -17,7 +18,7 @@ class BL_record(object):
         self.pickupOrDelivery = "N/A"
         self.service = "None"
         self.balance = 0
-
+        self.dateCompleted = "NA"
 
    def getValues(self, owner, weight, date, pickupOrDelivery, handWash, machineWash, dryClean, fold, press, paid, amount):
         print("getValues here")
@@ -52,7 +53,7 @@ class BL_record(object):
 
         self.service = service1 + service2 + service3
 
-        data = (self.owner, self.weight,self.service, self.cost, self.dateReceived, self.orderNumber, self.pickupOrDelivery,False)#self.service, self.balance)
+        data = (self.owner, self.weight,self.service, self.cost, self.dateReceived, self.orderNumber, self.pickupOrDelivery,self.balance, "Ongoing", self.dateCompleted)#self.service, self.balance)
         database = DAL_record()
         database.writeToLaundry(data)
 
@@ -77,10 +78,11 @@ class BL_record(object):
 
        # Dry Clean cost calculation
        if dryClean == True:
-            if piece <= 5:
-                washCost = 100 * piece
-            if piece > 5:
-                washCost = 80 * piece
+           piece = weight
+           if piece <= 5:
+               washCost = 100 * piece
+           if piece > 5:
+               washCost = 80 * piece
 
        #other services cost calculation
        if pressService == True:
@@ -95,12 +97,14 @@ class BL_record(object):
 
    def getOrderNumber(self):
         newOrderNumber = 0
+        orderNumber = 0
         readOrderNumber = DAL_record()
-        readOrderNumber.readFromLaundry()
-        for rowNumber, rowData in enumerate(readOrderNumber.laundryTableData):
+        laundryTableData = readOrderNumber.readFromLaundry()
+        for rowNumber, rowData in enumerate(laundryTableData):
             for columnNumber, data in enumerate(rowData):
                 if columnNumber == 5: #column number of order number
                     orderNumber = data
+                    print(data)
         newOrderNumber = orderNumber + 1
         return newOrderNumber
 
@@ -122,17 +126,30 @@ class BL_record(object):
         balance = cost - payment
         return balance
 
-   def getTableValues(self):
+   def getTableLaundry(self,status):
         dataTable = DAL_record()
-        laundryData =dataTable.readOngoingLaumdry()
+        laundryData =dataTable.readLaundry(status)
         return laundryData
-   '''
-   def checkOngoing(self,data):
-       isOngoing = data[7]
-       if isOngoing == "Ongoing":
-           return True
+
+   def changeStatus(self,orderNumber):
+       balance = self.checkBalance(orderNumber)
+       msgBox = QMessageBox()
+       if balance[0] == 0:
+           msgBox.setIcon(QMessageBox.Information)
+           msg = "No balance remaining. Status Changed."
+           status = DAL_record()
+           date = self.getDate()
+           status.updateStatus(orderNumber,date)
        else:
-           return False
-   '''
+           msgBox.setIcon(QMessageBox.Warning)
+           msg = "Please pay remaining balance! Status not changed."
+       msgBox.setText(msg)
+       msgBox.setWindowTitle("Status Message")
+       msgBox.addButton('Ok', QMessageBox.YesRole)
+       msgBox.exec()
+
+   def checkBalance(self,orderNumber):
+       getBalance = DAL_record()
+       return getBalance.readBalance(orderNumber)
    def closeDB(self, dataTable):
        dataTable.closeDB()
