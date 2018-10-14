@@ -8,11 +8,16 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-class Ui_Dialog(object):
-    def setupUi(self, Dialog):
-        Dialog.setObjectName("Dialog")
-        Dialog.resize(660, 457)
-        self.groupBox = QtWidgets.QGroupBox(Dialog)
+from PyQt5.QtWidgets import QMessageBox
+import sys
+sys.path.append('../')
+from BL.BL_viewCust import BL_viewCust
+
+class Ui_viewCustomers(object):
+    def setupUi(self, viewCustomers, CAG_main):
+        viewCustomers.setObjectName("Dialog")
+        viewCustomers.resize(660, 457)
+        self.groupBox = QtWidgets.QGroupBox(viewCustomers)
         self.groupBox.setGeometry(QtCore.QRect(10, 10, 641, 441))
         self.groupBox.setObjectName("groupBox")
         self.searchLine = QtWidgets.QLineEdit(self.groupBox)
@@ -67,8 +72,12 @@ class Ui_Dialog(object):
         self.closeButton.setGeometry(QtCore.QRect(540, 410, 91, 23))
         self.closeButton.setObjectName("closeButton")
 
-        self.retranslateUi(Dialog)
-        QtCore.QMetaObject.connectSlotsByName(Dialog)
+        self.retranslateUi(viewCustomers)
+        QtCore.QMetaObject.connectSlotsByName(viewCustomers)
+        self.closeButton.clicked.connect(lambda: self.backMain(viewCustomers, CAG_main))
+        self.goButton.clicked.connect(lambda: self.search())
+        
+        
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
@@ -90,14 +99,41 @@ class Ui_Dialog(object):
         item = self.tableWidget.horizontalHeaderItem(5)
         item.setText(_translate("Dialog", "Date Completed"))
         self.closeButton.setText(_translate("Dialog", "Close"))
-
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    Dialog = QtWidgets.QDialog()
-    ui = Ui_Dialog()
-    ui.setupUi(Dialog)
-    Dialog.show()
-    sys.exit(app.exec_())
-
+    
+    def backMain(self, viewCustomers, CAG_main):
+        CAG_main.show()
+        viewCustomers.close()
+        
+    def DisplayData(self):
+        x = BL_viewCust()
+        dataTable = x.getCustomer()
+        for rowNumber, rowData in enumerate(dataTable):
+            self.tableWidget.insertRow(rowNumber)
+            for columnNumber, data in enumerate(rowData):
+                if columnNumber < 5:
+                    self.tableWidget.setItem(rowNumber, columnNumber, QtWidgets.QTableWidgetItem(str(data)))
+                    
+    def search(self):
+        x = BL_viewCust()
+        if self.searchLine.text() == "":
+            nfound = QMessageBox()
+            nfound.setIcon(QMessageBox.Information)
+            nfound.setText("Please fill up the search line.")
+            nfound.setWindowTitle("Empty search line")
+            nfound.setStandardButtons(QMessageBox.Ok)
+            nfound.exec_()
+        elif x.checkPresence(self.searchLine.text()) == 0:
+            nfound = QMessageBox()
+            nfound.setIcon(QMessageBox.Information)
+            nfound.setText("User not found in database.")
+            nfound.setWindowTitle("Search failed")
+            nfound.setStandardButtons(QMessageBox.Ok)
+            nfound.exec_()
+            
+        else:
+            data = x.getOrders(self.searchLine.text())
+            for rowNumber, rowData in enumerate(data):
+                self.tableWidget.insertRow(rowNumber)
+                for columnNumber, data in enumerate(rowData):
+                    if columnNumber < 6:
+                        self.tableWidget.setItem(rowNumber, columnNumber, QtWidgets.QTableWidgetItem(str(data)))

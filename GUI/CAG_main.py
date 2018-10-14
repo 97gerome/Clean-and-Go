@@ -9,6 +9,8 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from CAG_ViewRecord import Ui_ViewRecord
 from CAG_cOrders import Ui_completedOrders
+from CAG_addCustomer import Ui_addCustomer
+from CAG_viewCustomers import Ui_viewCustomers
 class Ui_CAG_main(object):
     def setupUi(self, CAG_main, CAG_login):
         CAG_main.setObjectName("CAG_main")
@@ -24,21 +26,25 @@ class Ui_CAG_main(object):
         self.newCustomer_Button = QtWidgets.QPushButton(self.centralwidget)
         self.newCustomer_Button.setGeometry(QtCore.QRect(390, 240, 151, 31))
         self.newCustomer_Button.setObjectName("newCustomer_Button")
-        self.Orders_graphics = QtWidgets.QGraphicsView(self.centralwidget)
-        self.Orders_graphics.setGeometry(QtCore.QRect(30, 30, 151, 192))
-        self.Orders_graphics.setObjectName("Orders_graphics")
-        self.cOrders_graphics = QtWidgets.QGraphicsView(self.centralwidget)
-        self.cOrders_graphics.setGeometry(QtCore.QRect(210, 30, 151, 192))
-        self.cOrders_graphics.setObjectName("cOrders_graphics")
-        self.newCustomer_graphics = QtWidgets.QGraphicsView(self.centralwidget)
-        self.newCustomer_graphics.setGeometry(QtCore.QRect(390, 30, 151, 192))
-        self.newCustomer_graphics.setObjectName("newCustomer_graphics")
         self.viewCustomer_Button = QtWidgets.QPushButton(self.centralwidget)
         self.viewCustomer_Button.setGeometry(QtCore.QRect(570, 240, 151, 31))
         self.viewCustomer_Button.setObjectName("viewCustomer_Button")
-        self.viewCustomer_graphics = QtWidgets.QGraphicsView(self.centralwidget)
-        self.viewCustomer_graphics.setGeometry(QtCore.QRect(570, 30, 151, 192))
-        self.viewCustomer_graphics.setObjectName("viewCustomer_graphics")
+        self.labelOrders = QtWidgets.QLabel(self.centralwidget)
+        self.labelOrders.setGeometry(QtCore.QRect(30, 30, 151, 191))
+        self.labelOrders.setText("")
+        self.labelOrders.setObjectName("labelOrders")
+        self.labelcOrders = QtWidgets.QLabel(self.centralwidget)
+        self.labelcOrders.setGeometry(QtCore.QRect(210, 30, 151, 191))
+        self.labelcOrders.setText("")
+        self.labelcOrders.setObjectName("labelcOrders")
+        self.labelCustomer = QtWidgets.QLabel(self.centralwidget)
+        self.labelCustomer.setGeometry(QtCore.QRect(390, 30, 151, 191))
+        self.labelCustomer.setText("")
+        self.labelCustomer.setObjectName("labelCustomer")
+        self.labelCustomers = QtWidgets.QLabel(self.centralwidget)
+        self.labelCustomers.setGeometry(QtCore.QRect(570, 30, 151, 191))
+        self.labelCustomers.setText("")
+        self.labelCustomers.setObjectName("labelCustomers")
         CAG_main.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(CAG_main)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 751, 21))
@@ -70,14 +76,31 @@ class Ui_CAG_main(object):
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuAccount.menuAction())
         self.menubar.addAction(self.menuHelp.menuAction())
+        orderspix = QtGui.QPixmap("machine.png")
+        self.labelOrders.setScaledContents(True)
+        self.labelOrders.setPixmap(orderspix)
+        
+        completedpix = QtGui.QPixmap("completed.png")
+        self.labelcOrders.setScaledContents(True)
+        self.labelcOrders.setPixmap(completedpix)
+        
+        newpix = QtGui.QPixmap("new.png")
+        self.labelCustomer.setScaledContents(True)
+        self.labelCustomer.setPixmap(newpix)
+
+        existpix = QtGui.QPixmap("existing.png")
+        self.labelCustomers.setScaledContents(True)
+        self.labelCustomers.setPixmap(existpix)
 
         self.retranslateUi(CAG_main)
         QtCore.QMetaObject.connectSlotsByName(CAG_main)
         
         self.orders_button.clicked.connect(lambda: self.viewRecord(CAG_main))
         self.cOrders_Button.clicked.connect(lambda: self.completedRecord(CAG_main))
+        self.newCustomer_Button.clicked.connect(lambda: self.addCustomer(CAG_main))
         self.action_Exit.triggered.connect(lambda: self.closeMain(CAG_main))
         self.actionLog_Out.triggered.connect(lambda: self.logOut(CAG_main, CAG_login))
+        self.viewCustomer_Button.clicked.connect(lambda: self.viewCustomers(CAG_main))
 
     def retranslateUi(self, CAG_main):
         _translate = QtCore.QCoreApplication.translate
@@ -110,6 +133,21 @@ class Ui_CAG_main(object):
         ui.setupUi(completedOrders, CAG_main)
         CAG_main.hide()
         completedOrders.show()
+        
+    #display the add customer form
+    def addCustomer(self,CAG_main):
+        self.newCustomer = QtWidgets.QDialog()
+        self.newCust = Ui_addCustomer()
+        self.newCust.setupUi(self.newCustomer, CAG_main)
+        CAG_main.hide()
+        self.newCustomer.show()
+        
+    def viewCustomers(self, CAG_main):
+        viewCustomers = QtWidgets.QDialog()
+        viewCust = Ui_viewCustomers()
+        viewCust.setupUi(viewCustomers, CAG_main)
+        CAG_main.hide()
+        viewCustomers.show()
 
     def closeMain(self, CAG_main):
         CAG_main.close()
@@ -118,12 +156,4 @@ class Ui_CAG_main(object):
         CAG_login.show()
         CAG_main.close()
 
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    CAG_main = QtWidgets.QMainWindow()
-    ui = Ui_CAG_main()
-    ui.setupUi(CAG_main)
-    CAG_main.show()
-    sys.exit(app.exec_())
 

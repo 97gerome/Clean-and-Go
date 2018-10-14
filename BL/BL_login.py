@@ -28,4 +28,3 @@ class BL_login(object):
         else:
             return 1
         
-        #print(cursor.fetchone()[1])

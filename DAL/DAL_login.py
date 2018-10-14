@@ -11,7 +11,7 @@ class DAL_login(object):
     def __init__(self):
         print ("init")
         #path = "C:\\Users\\Gerome Mandapat\\Desktop\\CAG\\Clean-and-Go\\Database\\Laundry.db"
-        path = 'C:/GitHub/Clean-and-Go/Database/Laundry.db'
+        path = '../Database/Laundry.db'
         self.conn = sqlite3.connect(path)
         self.cursor = self.conn.cursor()
         

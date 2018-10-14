@@ -6,13 +6,16 @@
 #
 # WARNING! All changes made in this file will be lost!
 
+import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
-
-class Ui_Dialog(object):
-    def setupUi(self, Dialog):
-        Dialog.setObjectName("Dialog")
-        Dialog.resize(332, 389)
-        self.groupBox = QtWidgets.QGroupBox(Dialog)
+from PyQt5.QtWidgets import QMessageBox
+from BL.BL_addCust import BL_addCust
+sys.path.append('../')
+class Ui_addCustomer(object):
+    def setupUi(self, addCustomerUI, CAG_main):
+        addCustomerUI.setObjectName("Dialog")
+        addCustomerUI.resize(332, 389)
+        self.groupBox = QtWidgets.QGroupBox(addCustomerUI)
         self.groupBox.setGeometry(QtCore.QRect(10, 10, 311, 371))
         self.groupBox.setObjectName("groupBox")
         self.lineEdit_email = QtWidgets.QLineEdit(self.groupBox)
@@ -61,12 +64,15 @@ class Ui_Dialog(object):
         self.cancel_Button.setGeometry(QtCore.QRect(200, 340, 91, 23))
         self.cancel_Button.setObjectName("cancel_Button")
 
-        self.retranslateUi(Dialog)
-        QtCore.QMetaObject.connectSlotsByName(Dialog)
+        self.retranslateUi(addCustomerUI)
+        QtCore.QMetaObject.connectSlotsByName(addCustomerUI)
+        
+        self.cancel_Button.clicked.connect(lambda: self.backtoMain(addCustomerUI, CAG_main))
+        self.OK_button.clicked.connect(lambda: self.writeToCustomers())
 
-    def retranslateUi(self, Dialog):
+    def retranslateUi(self, addCustomerUI):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
+        addCustomerUI.setWindowTitle(_translate("Dialog", "Dialog"))
         self.groupBox.setTitle(_translate("Dialog", "Customer"))
         self.label.setText(_translate("Dialog", "Name"))
         self.label_2.setText(_translate("Dialog", "Address"))
@@ -74,14 +80,37 @@ class Ui_Dialog(object):
         self.label_4.setText(_translate("Dialog", "Email"))
         self.OK_button.setText(_translate("Dialog", "Add"))
         self.cancel_Button.setText(_translate("Dialog", "Cancel"))
-
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    Dialog = QtWidgets.QDialog()
-    ui = Ui_Dialog()
-    ui.setupUi(Dialog)
-    Dialog.show()
-    sys.exit(app.exec_())
+        
+    def backtoMain(self, addCustomerUI, CAG_main):
+        CAG_main.show()
+        addCustomerUI.close()
+        
+    def writeToCustomers(self):
+        name = self.lineEdit_Name.text()
+        contact = self.lineEdit_Contact.text()
+        email = self.lineEdit_email.text()
+        address = self.lineEdit_Address.text()
+        
+        if self.lineEdit_Name.text() == "" or self.lineEdit_Contact.text() == "" or self.lineEdit_email.text() == "" or self.lineEdit_Address.text() == "":
+            missing = QMessageBox()
+            missing.setIcon(QMessageBox.Information)
+            missing.setText("Please fill up all fields.")
+            missing.setWindowTitle("Missing Fields")
+            missing.setStandardButtons(QMessageBox.Ok)
+            missing.exec_()
+        else:
+            rec = BL_addCust()
+            rec.customerValues(name, contact, email, address)
+            success = QMessageBox()
+            success.setIcon(QMessageBox.Information)
+            success.setText("Customer successfully added.")
+            success.setWindowTitle("Add successful")
+            success.setStandardButtons(QMessageBox.Ok)
+            success.exec_()
+            self.lineEdit_Name.setText("")
+            self.lineEdit_Contact.setText("")
+            self.lineEdit_email.setText("")
+            self.lineEdit_Address.setText("")
+        
+        
 

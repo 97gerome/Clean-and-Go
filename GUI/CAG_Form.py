@@ -144,6 +144,12 @@ class Ui_Form(object):
         self.setCheckBoxAvailability()
 
     def setCheckBoxAvailability(self):
+        if (((self.radioButton_handWashed.isChecked() or self.radioButton_machineWashed.isChecked()) or self.radioButton_dryClean.isChecked()) == False):
+            self.checkBox_press.setEnabled(False)
+            self.checkBox_fold.setEnabled(False)
+        else:
+            self.checkBox_press.setEnabled(True)
+            self.checkBox_fold.setEnabled(True)
     def addRecord(self, Form, selfObject):
         print("add record")
         handWash = False

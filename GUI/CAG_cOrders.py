@@ -56,11 +56,11 @@ class Ui_completedOrders(object):
         item = self.tableWidget.horizontalHeaderItem(1)
         item.setText(_translate("Dialog", "Weight"))
         item = self.tableWidget.horizontalHeaderItem(2)
-        item.setText(_translate("Dialog", "Cost"))
-        item = self.tableWidget.horizontalHeaderItem(3)
-        item.setText(_translate("Dialog", "Date received"))
-        item = self.tableWidget.horizontalHeaderItem(4)
         item.setText(_translate("Dialog", "Services"))
+        item = self.tableWidget.horizontalHeaderItem(3)
+        item.setText(_translate("Dialog", "Cost"))
+        item = self.tableWidget.horizontalHeaderItem(4)
+        item.setText(_translate("Dialog", "Date Received"))
         item = self.tableWidget.horizontalHeaderItem(5)
         item.setText(_translate("Dialog", "Order Number"))
         item = self.tableWidget.horizontalHeaderItem(6)
@@ -79,9 +79,9 @@ class Ui_completedOrders(object):
         for rowNumber, rowData in enumerate(dataTable):
             self.tableWidget.insertRow(rowNumber)
             for columnNumber, data in enumerate(rowData):
-                if columnNumber != 7:
+                if columnNumber < 7:
                     self.tableWidget.setItem(rowNumber, columnNumber, QtWidgets.QTableWidgetItem(str(data)))
-                if columnNumber >= 8:
+                if columnNumber >= 9:
                     self.tableWidget.setItem(rowNumber, columnNumber-2, QtWidgets.QTableWidgetItem(str(data)))
 
     def viewCustomer(self, currentRow):
